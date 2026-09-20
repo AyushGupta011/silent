@@ -49,9 +49,13 @@ export default function JournalClient({ cmsPosts = [] }) {
           <p className="text-xs font-mono uppercase tracking-widest text-zinc-400 mb-2">
             Journal / Archive
           </p>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-[450] tracking-[-0.03em] leading-tight text-zinc-950">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-3xl sm:text-5xl lg:text-6xl font-[450] tracking-[-0.03em] leading-tight text-zinc-950">
             Stories, case studies & dispatches from live production.
-          </h1>
+          </motion.h1>
 
           {/* Category Tabs */}
           <div className="flex items-center gap-2 overflow-x-auto py-6 no-scrollbar border-t border-zinc-100 mt-8">

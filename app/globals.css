@@ -213,6 +213,14 @@ ul {
   background: white;
 }
 
+.site-header.header-transparent {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+}
+
 /* ── UTILITIES ── */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

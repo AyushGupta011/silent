@@ -19,11 +19,13 @@ export default function Header() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
   const [light, setLight] = useState(false)
+  const [isAtTop, setIsAtTop] = useState(true)
   const [showreelOpen, setShowreelOpen] = useState(false)
   const headerRef = useRef(null)
 
   useEffect(() => {
     function update() {
+      setIsAtTop(window.scrollY < 20)
       const headerBottom = (headerRef.current?.offsetHeight ?? 59) + 4
       const darkEls = document.querySelectorAll('[data-header-scheme="light"]')
       let isLight = false
@@ -39,14 +41,25 @@ export default function Header() {
 
     window.addEventListener('scroll', update, { passive: true })
     update()
-    return () => window.removeEventListener('scroll', update)
-  }, [])
+    
+    // Fallbacks to ensure it recalculates after DOM paint and layout shifts
+    const t1 = setTimeout(update, 50)
+    const t2 = setTimeout(update, 200)
+    const t3 = setTimeout(update, 500)
+    
+    return () => {
+      window.removeEventListener('scroll', update)
+      clearTimeout(t1)
+      clearTimeout(t2)
+      clearTimeout(t3)
+    }
+  }, [pathname])
 
   return (
     <>
       <header
         ref={headerRef}
-        className={`site-header transition-colors duration-300 ${light ? 'header-light' : ''}`}
+        className={`site-header transition-all duration-300 ${light ? 'header-light' : ''} ${isAtTop ? 'header-transparent' : ''}`}
       >
         {/* Logo */}
         <Link href="/" className="site-logo group" data-cursor="hover">
