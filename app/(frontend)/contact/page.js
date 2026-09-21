@@ -2,6 +2,8 @@ import ContactClient from './ContactClient'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Contact - Silent House Group',
   description: "Let's make something unforgettable.",

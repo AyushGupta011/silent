@@ -2,6 +2,8 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import TouringClient from './TouringClient'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Touring | Silent House',
   description: 'We deliver extraordinary live experiences to audiences across the globe.',

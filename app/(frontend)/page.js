@@ -11,6 +11,8 @@ import IntroAnimation from '../components/IntroAnimation'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Silent House | Live Entertainment Design, Creative Direction & Production',
   description: 'Three unique companies under one roof — Studios, Productions, Touring — creating experiences you’ll never forget for Taylor Swift, Sphere Las Vegas, Usher, and more.',

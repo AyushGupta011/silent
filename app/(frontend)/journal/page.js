@@ -2,6 +2,8 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import JournalClient from './JournalClient'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Journal | Silent House',
   description: 'Stories, case studies & dispatches from live production.',

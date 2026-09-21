@@ -2,6 +2,8 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import ProductionsClient from './ProductionsClient'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Productions | Silent House',
   description: 'We develop and produce innovative programming across all film, streaming, broadcast & digital media.',

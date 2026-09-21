@@ -2,6 +2,8 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import StudiosClient from './StudiosClient'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Studios | Silent House',
   description: 'Silent House Studios operates at the intersection of concept and execution.',
