@@ -7,7 +7,7 @@ const adminsOnly = ({ req: { user } }) => Boolean(user)
 
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || 'change-this-development-secret-before-production',
-  db: sqliteAdapter({ client: { url: process.env.DATABASE_URL || 'file:./silent-house.db' } }),
+  db: sqliteAdapter({ client: { url: process.env.DATABASE_URL || 'file:./silent-house.db', authToken: process.env.DATABASE_AUTH_TOKEN } }),
   editor: lexicalEditor(),
   admin: { user: 'users' },
   collections: [
