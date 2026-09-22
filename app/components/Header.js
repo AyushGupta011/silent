@@ -23,6 +23,46 @@ export default function Header() {
   const [showreelOpen, setShowreelOpen] = useState(false)
   const headerRef = useRef(null)
 
+  const [user, setUser] = useState(null)
+  const [authMenuOpen, setAuthMenuOpen] = useState(false)
+
+  useEffect(() => {
+    // Check auth status with Supabase
+    const checkAuth = async () => {
+      try {
+        const { createClient } = await import('@/utils/supabase/client')
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        
+        if (user) {
+          // Add custom role checks here later if using Supabase roles or RLS
+          setUser({
+            name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
+            email: user.email,
+            role: 'user', // Default role until Supabase custom claims are set up
+          })
+        }
+      } catch (err) {
+        console.error('Failed to check auth status', err)
+      }
+    }
+    checkAuth()
+  }, [])
+
+  const handleLogout = async () => {
+    try {
+      const { createClient } = await import('@/utils/supabase/client')
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      
+      setUser(null)
+      setAuthMenuOpen(false)
+      window.location.href = '/'
+    } catch (err) {
+      console.error('Logout failed', err)
+    }
+  }
+
   useEffect(() => {
     function update() {
       setIsAtTop(window.scrollY < 20)
@@ -106,7 +146,7 @@ export default function Header() {
         </nav>
 
         {/* Right Nav */}
-        <div className="header-right">
+        <div className="header-right flex items-center gap-4">
           <button
             onClick={() => setShowreelOpen(true)}
             className="hidden sm:flex md:hidden text-xs uppercase tracking-wider font-medium px-3 py-1.5 rounded-full border border-current/20 hover:border-current transition-colors"
@@ -116,7 +156,7 @@ export default function Header() {
 
           <Link
             href="/contact"
-            className="header-contact group flex items-center gap-2"
+            className="header-contact group hidden lg:flex items-center gap-2"
             data-cursor="hover"
           >
             <span>Let&apos;s talk</span>
@@ -127,6 +167,48 @@ export default function Header() {
               <span className="w-1 h-1 bg-current rounded-[0.5px]" />
             </span>
           </Link>
+
+          {user ? (
+            <div className="relative">
+              <button 
+                onClick={() => setAuthMenuOpen(!authMenuOpen)}
+                className="text-xs font-medium uppercase tracking-wider px-3 py-1.5 border border-current/20 hover:border-current rounded-full transition-colors"
+              >
+                {user.name}
+              </button>
+              <AnimatePresence>
+                {authMenuOpen && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute right-0 top-full mt-2 w-48 bg-white text-black rounded-md shadow-lg overflow-hidden flex flex-col z-50 border border-zinc-200"
+                  >
+                    {user.role === 'admin' && (
+                      <Link href="/admin-dashboard" className="block w-full px-4 py-2.5 text-sm text-left hover:bg-zinc-50 border-b border-zinc-100 transition-colors">
+                        Admin Dashboard
+                      </Link>
+                    )}
+                    <Link href="/account" className="block w-full px-4 py-2.5 text-sm text-left hover:bg-zinc-50 border-b border-zinc-100 transition-colors">
+                      Account Settings
+                    </Link>
+                    <button onClick={handleLogout} className="block w-full px-4 py-2.5 text-sm text-left hover:bg-zinc-50 text-red-600 transition-colors">
+                      Log Out
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link href="/login" className="text-xs uppercase tracking-wider font-medium hover:opacity-70 transition-opacity">
+                Log In
+              </Link>
+              <Link href="/login?mode=signup" className="text-xs uppercase tracking-wider font-medium px-3 py-1.5 bg-black text-white rounded-full hover:opacity-90 transition-opacity whitespace-nowrap shrink-0">
+                Sign Up
+              </Link>
+            </div>
+          )}
 
           <button
             className="header-menu md:hidden"
