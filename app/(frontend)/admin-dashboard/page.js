@@ -25,18 +25,20 @@ export default function AdminDashboard() {
         }
 
         // Check if admin (this validates the token on the backend)
-        const resUser = await fetch('http://localhost:4000/api/users/me', { headers })
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+        const resUser = await fetch(`${apiUrl}/api/users/me`, { headers })
         if (!resUser.ok) return window.location.href = '/login'
         const userData = await resUser.json()
         if (userData.role !== 'admin') return window.location.href = '/'
         setUser(userData)
 
         // Fetch users
-        const resUsers = await fetch('http://localhost:4000/api/admin/users', { headers })
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+        const resUsers = await fetch(`${apiUrl}/api/admin/users`, { headers })
         if (resUsers.ok) setUsers(await resUsers.json())
 
         // Fetch contacts
-        const resContacts = await fetch('http://localhost:4000/api/admin/contacts', { headers })
+        const resContacts = await fetch(`${apiUrl}/api/admin/contacts`, { headers })
         if (resContacts.ok) setContacts(await resContacts.json())
         
       } catch (err) {

@@ -38,7 +38,8 @@ export default function AccountSettings() {
       const supabase = createClient()
       const { data: { session } } = await supabase.auth.getSession()
       
-      const res = await fetch('http://localhost:4000/api/users/deactivate', { 
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'
+      const res = await fetch(`${apiUrl}/api/users/deactivate`, { 
         method: 'PUT', 
         headers: {
           'Authorization': `Bearer ${session?.access_token}`
@@ -61,7 +62,8 @@ export default function AccountSettings() {
       const supabase = createClient()
       const { data: { session } } = await supabase.auth.getSession()
       
-      const res = await fetch('http://localhost:4000/api/users/delete', { 
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'
+      const res = await fetch(`${apiUrl}/api/users/delete`, { 
         method: 'DELETE', 
         headers: {
           'Authorization': `Bearer ${session?.access_token}`
