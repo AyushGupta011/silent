@@ -33,7 +33,6 @@ export default function AdminDashboard() {
         setUser(userData)
 
         // Fetch users
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
         const resUsers = await fetch(`${apiUrl}/api/admin/users`, { headers })
         if (resUsers.ok) setUsers(await resUsers.json())
 
