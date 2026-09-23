@@ -26,7 +26,7 @@ export default function AdminDashboard() {
         }
 
         // Check if admin (this validates the token on the backend)
-        const apiUrl = process.env.API_URL || 'http://localhost:4000';
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
         const resUser = await fetch(`${apiUrl}/api/users/me`, { headers })
         if (!resUser.ok) return window.location.href = '/login'
         const userData = await resUser.json()
