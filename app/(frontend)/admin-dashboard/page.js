@@ -7,25 +7,26 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState([])
   const [contacts, setContacts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const fetchAdminData = async () => {
       try {
         const { createClient } = await import('@/utils/supabase/client')
         const supabase = createClient()
-        
+
         // Get Supabase session token
         const { data: { session } } = await supabase.auth.getSession()
         if (!session) return window.location.href = '/login'
         const token = session.access_token
 
-        const headers = { 
+        const headers = {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` 
+          'Authorization': `Bearer ${token}`
         }
 
         // Check if admin (this validates the token on the backend)
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+        const apiUrl = process.env.API_URL || 'http://localhost:4000';
         const resUser = await fetch(`${apiUrl}/api/users/me`, { headers })
         if (!resUser.ok) return window.location.href = '/login'
         const userData = await resUser.json()
@@ -39,9 +40,10 @@ export default function AdminDashboard() {
         // Fetch contacts
         const resContacts = await fetch(`${apiUrl}/api/admin/contacts`, { headers })
         if (resContacts.ok) setContacts(await resContacts.json())
-        
+
       } catch (err) {
         console.error(err)
+        setError('Failed to connect to the backend. ' + err.message)
       } finally {
         setLoading(false)
       }
@@ -49,7 +51,23 @@ export default function AdminDashboard() {
     fetchAdminData()
   }, [])
 
-  if (loading) return <div className="min-h-screen pt-32 px-8">Loading...</div>
+  if (loading) return <div className="min-h-screen pt-32 px-8 flex justify-center">Loading...</div>
+
+  if (error) {
+    return (
+      <div className="min-h-screen pt-32 px-8 flex justify-center bg-zinc-50">
+        <div className="text-center p-8 bg-white border border-red-200 shadow-sm rounded-md max-w-lg w-full">
+          <h2 className="text-xl font-medium text-red-600 mb-2">Connection Error</h2>
+          <p className="text-sm text-zinc-600 mb-4">{error}</p>
+          <p className="text-xs font-mono text-zinc-500 text-left bg-zinc-100 p-4 rounded">
+            Did you add NEXT_PUBLIC_API_URL to Vercel? <br /><br />
+            Current API URL is trying to use: {process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   if (!user || user.role !== 'admin') return null
 
   return (
